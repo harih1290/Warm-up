@@ -4,6 +4,7 @@ dist/
 layouts/
 components/
 features/
+node_modules/
 lib/
 services/
 pages/

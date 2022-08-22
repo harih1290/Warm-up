@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ActivityIndicator, } from 'react-native';
-import React, { Component } from 'react';
+import React, { Component,Suspense } from 'react';
 import RootNavigator from './pages/RootNavigator.js';
+//const Main = React.lazy(() => import('./layouts/index'));
 import Initloader from  './pages/Initloader';
+import Main from  './layouts/index';
 
 import HomeScreen from './pages/HomeScreen';
 // export default function App() {
@@ -35,6 +37,7 @@ export default class App extends Component {
   //Get Home Screen Data API Action
   componentDidMount() {
     this.loadAPI(); // Call home screen get data API function
+    //setTimeout(this.setState(this.loadAPI()), 2000);
   }
  
   //Login API Function
@@ -44,31 +47,30 @@ export default class App extends Component {
     const API_URL="https://weatherbit-v1-mashape.p.rapidapi.com/forecast/3hourly";
     this.setState({ isLoading: true }); // Once You Call the API Action loading will be true
     fetch(API_URL, {
-      method: "POST",
-      params: {lat: '35.5', lon: '-78.5'},
+      method: "GET",     
       headers: {
         "Content-Type": "application/json",
-        'X-RapidAPI-Key': 'SIGN-UP-FOR-KEY',
-    'X-RapidAPI-Host': 'weatherbit-v1-mashape.p.rapidapi.com'
       }
     })
       .then(response => response.json())
       .then(responseText => {
         console.log(responseText['message']);
-        if(responseText['message']=='You are not subscribed to this API.'){
-          this.setState({ isLoading: true });
-        }else{
+        // if(responseText['message']=='You are not subscribed to this API.'){
+        //   this.setState({ isLoading: true });
+        // }else{
         
         debugger;
         // You can do anything accroding to your API response
         this.setState({ isLoading: false }); // After getting response make loading to false
-      }
+      //}
       })
       .catch(error => {});
   };
 
   render() {
     //debugger;
+    //this.setState({isLoading: true });
+    setTimeout(function(){this.setState({timePassed: false})}, 50000);
     if(this.state.isLoading){
        return (
         <>
@@ -82,8 +84,11 @@ export default class App extends Component {
       </>
     );
   }else{
+    console.log("Main load",<Main />);
     return (
-      <Initloader />
+      <>
+      <Main />
+      </>
     );
   }
   }
